@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Balls</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>
+</head>
+<body>
+    <script>
+        let balls = [];
+        let gravitySlider, elasticitySlider, timeSlider;
+        let boxSize = 400;
+        
+        function setup() {
+            createCanvas(boxSize, boxSize);
+            gravitySlider = createSlider(0, 1, 0.1, 0.01);
+            gravitySlider.position(10, boxSize + 10);
+            createP("Gravity").position(10, boxSize - 10);
+
+            elasticitySlider = createSlider(0, 1, 0.8, 0.01);
+            elasticitySlider.position(10, boxSize + 40);
+            createP("Elasticity").position(10, boxSize + 20);
+            
+            timeSlider = createSlider(0.1, 2, 1, 0.1);
+            timeSlider.position(10, boxSize + 70);
+            createP("Time Scale").position(10, boxSize + 50);
+            
+            for (let i = 0; i < 10; i++) {
+                balls.push(new Ball(random(50, 350), random(50, 350), random(10, 20)));
+            }
+        }
+        
+        function draw() {
+            background(220);
+            let gravity = gravitySlider.value();
+            let elasticity = elasticitySlider.value();
+            let timeScale = timeSlider.value();
+            
+            for (let ball of balls) {
+                ball.update(gravity, elasticity, timeScale);
+                ball.display();
+            }
+        }
+        
+        class Ball {
+            constructor(x, y, r) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+                this.vx = random(-2, 2);
+                this.vy = random(-2, 2);
+            }
+            
+            update(gravity, elasticity, timeScale) {
+                this.vy += gravity * timeScale;
+                this.x += this.vx * timeScale;
+                this.y += this.vy * timeScale;
+                
+                if (this.x - this.r < 0 || this.x + this.r > boxSize) {
+                    this.vx *= -elasticity;
+                    this.x = constrain(this.x, this.r, boxSize - this.r);
+                }
+                
+                if (this.y - this.r < 0 || this.y + this.r > boxSize) {
+                    this.vy *= -elasticity;
+                    this.y = constrain(this.y, this.r, boxSize - this.r);
+                }
+            }
+            
+            display() {
+                fill(255, 0, 0);
+                noStroke();
+                ellipse(this.x, this.y, this.r * 2);
+            }
+        }
+    </script>
+</body>
+</html>
