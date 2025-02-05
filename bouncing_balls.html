@@ -13,18 +13,21 @@
         let boxSize = 400;
         
         function setup() {
-            createCanvas(boxSize, boxSize);
-            gravitySlider = createSlider(0, 1, 0.1, 0.01);
-            gravitySlider.position(10, boxSize + 10);
-            createP("Gravity").position(10, boxSize - 10);
+    createCanvas(boxSize, boxSize);
 
-            elasticitySlider = createSlider(0, 1, 0.8, 0.01);
-            elasticitySlider.position(10, boxSize + 40);
-            createP("Elasticity").position(10, boxSize + 20);
-            
-            timeSlider = createSlider(0.1, 2, 1, 0.1);
-            timeSlider.position(10, boxSize + 70);
-            createP("Time Scale").position(10, boxSize + 50);
+    gravitySlider = createSlider(0, 1, 0.1, 0.01);
+    gravitySlider.position(10, boxSize + 20);
+    createP("Gravity").position(10, boxSize - 10);
+
+    elasticitySlider = createSlider(0, 1, 0.8, 0.01);
+    elasticitySlider.position(10, boxSize + 70);
+    createP("Elasticity").position(10, boxSize + 40);
+
+    timeSlider = createSlider(0.1, 2, 1, 0.1);
+    timeSlider.position(10, boxSize + 120);
+    createP("Time Scale").position(10, boxSize + 90);
+
+
             
             for (let i = 0; i < 10; i++) {
                 balls.push(new Ball(random(50, 350), random(50, 350), random(10, 20)));
