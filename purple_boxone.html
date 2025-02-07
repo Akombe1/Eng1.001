@@ -19,6 +19,7 @@
             grid-template-rows: repeat(10, 50px);
             gap: 1px;
             border: 2px solid black;
+            display: none;
         }
         .box {
             width: 50px;
@@ -36,7 +37,7 @@
             background-color: blue !important;
         }
         button {
-            margin-top: 20px;
+            margin-top: 10px;
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -49,8 +50,9 @@
     </style>
 </head>
 <body>
+    <button onclick="startGame()">Start Game</button>
     <div class="grid" id="grid"></div>
-    <button onclick="startReactionTest()">Test Reaction Time</button>
+    <button id="reaction-button" onclick="startReactionTest()" style="display: none;">Test Reaction Time</button>
     <p id="reaction-time"></p>
     
     <script>
@@ -92,6 +94,12 @@
             setTimeout(changeRandomBox, Math.random() * 9000 + 1000);
         }
 
+        function startGame() {
+            document.getElementById("grid").style.display = "grid";
+            document.getElementById("reaction-button").style.display = "block";
+            createGrid();
+        }
+
         grid.addEventListener("click", function (event) {
             if (event.target.classList.contains("blue")) {
                 const reactionTime = Date.now() - startTime;
@@ -99,9 +107,6 @@
                 startReactionTest();
             }
         });
-
-        createGrid();
-        setTimeout(changeRandomBox, Math.random() * 9000 + 1000);
     </script>
 </body>
 </html>
