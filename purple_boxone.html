@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Reaction Timer</title>
@@ -10,73 +10,62 @@
       background-color: purple; /* Start as purple */
       margin-bottom: 20px;
     }
-    
   </style>
 </head>
 <body>
+    <div class="grid" id="grid"></div>
+    <button onclick="startReactionTest()">Test Reaction Time</button>
+    <p id="reaction-time"></p>
+    
+    <script>
+        const grid = document.getElementById("grid");
+        const gridSize = 10;
+        let blueBox = null;
+        let startTime = null;
+        let timeout = null;
 
-<h1>Reaction Timer Game</h1>
-<div id="box"></div>
-<button id="reactionButton">Click Me!</button>
-<p id="status"></p>
+        function createGrid() {
+            grid.innerHTML = "";
+            for (let row = 0; row < gridSize; row++) {
+                for (let col = 0; col < gridSize; col++) {
+                    const box = document.createElement("div");
+                    box.classList.add("box");
+                    if ((row + col) % 2 === 0) {
+                        box.classList.add("red");
+                    }
+                    grid.appendChild(box);
+                }
+            }
+        }
 
-<script>
-  // Number of trials we want
-  const MAX_TRIALS = 3;
-  let trialCount = 0;
-  let startTime = 0;
+        function changeRandomBox() {
+            if (blueBox) {
+                blueBox.classList.remove("blue");
+            }
+            const boxes = document.querySelectorAll(".box");
+            blueBox = boxes[Math.floor(Math.random() * boxes.length)];
+            blueBox.classList.add("blue");
+            startTime = Date.now();
+            timeout = setTimeout(changeRandomBox, Math.random() * 9000 + 1000);
+        }
 
-  // Start the first trial right away
-  startTrial();
+        function startReactionTest() {
+            createGrid();
+            document.getElementById("reaction-time").innerText = "";
+            if (timeout) clearTimeout(timeout);
+            setTimeout(changeRandomBox, Math.random() * 9000 + 1000);
+        }
 
-  // Main function to handle each trial
-  function startTrial() {
-    const box = document.getElementById("box");
-    const status = document.getElementById("status");
+        grid.addEventListener("click", function (event) {
+            if (event.target.classList.contains("blue")) {
+                const reactionTime = Date.now() - startTime;
+                document.getElementById("reaction-time").innerText = `Reaction Time: ${reactionTime} ms`;
+                startReactionTest();
+            }
+        });
 
-    // Reset box to purple
-    box.style.backgroundColor = "purple";
-    status.textContent = "Wait for it...";
-
-    // Pick a random delay between 1 and 3 seconds
-    const delay = Math.floor(Math.random() * 2000) + 1000; // 1000–3000 ms
-
-    // After the delay, turn box red and mark the start time
-    setTimeout(() => {
-      box.style.backgroundColor = "red";
-      status.textContent = "Click the button NOW!";
-      startTime = Date.now(); // Record the time
-    }, delay);
-  }
-
-  // Event handler for the button click
-  document.getElementById("reactionButton").addEventListener("click", () => {
-    const box = document.getElementById("box");
-    const status = document.getElementById("status");
-
-    // Only record reaction if the box is actually red
-    if (box.style.backgroundColor === "red") {
-      const reactionTime = Date.now() - startTime; // Calculate reaction time in ms
-      trialCount++;
-
-      status.textContent = `Reaction time: ${reactionTime} ms`;
-
-      // If we haven't reached the maximum trial count, start another trial
-      if (trialCount < MAX_TRIALS) {
-        // Pause briefly before the next trial
-        setTimeout(startTrial, 1000);
-      } else {
-        // We've completed the game
-        status.textContent += " — Game Over!";
-        // Disable the button or remove event to prevent extra clicks
-        document.getElementById("reactionButton").disabled = true;
-      }
-    } else {
-      // User clicked too early
-      status.textContent = "Too soon! Wait for the box to turn red!";
-    }
-  });
-</script>
-
+        createGrid();
+        setTimeout(changeRandomBox, Math.random() * 9000 + 1000);
+    </script>
 </body>
 </html>
