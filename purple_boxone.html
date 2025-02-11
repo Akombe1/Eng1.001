@@ -49,11 +49,12 @@
         }
     </style>
 </head>
-<body  style="background-color:powderblue;">    
-
-    <button onclick="startGame()">Start Game</button>
+<body style="background-color:rgb(0, 0, 0);">
+    
+    <h2 id="user-info" style="color: white; display: none;"></h2>
+    <button onclick="requestUserInfo()">Start Game</button>
     <div class="grid" id="grid"></div>
-    <button id="reaction-button" onclick="startReactionTest()" style="display: none;">Test Reaction Time</button>
+    <button id="reaction-button" onclick="startReactionTest()" style="display: none;">Stop</button>
     <p id="reaction-time"></p>
     
     <script>
@@ -62,6 +63,19 @@
         let blueBox = null;
         let startTime = null;
         let timeout = null;
+
+        function requestUserInfo() {
+            let name = prompt("Enter your name:");
+            let nationality = prompt("Enter your nationality:");
+            
+            if (name && nationality) {
+                document.getElementById("user-info").innerText = `Player: ${name} (${nationality})`;
+                document.getElementById("user-info").style.display = "block";
+                startGame();
+            } else {
+                alert("Please enter both your name and nationality to start the game.");
+            }
+        }
 
         function createGrid() {
             grid.innerHTML = "";
@@ -85,14 +99,14 @@
             blueBox = boxes[Math.floor(Math.random() * boxes.length)];
             blueBox.classList.add("blue");
             startTime = Date.now();
-            timeout = setTimeout(changeRandomBox, Math.random() * 9000 + 1000);
+            timeout = setTimeout(changeRandomBox, Math.random() * 6000 + 1000);
         }
 
         function startReactionTest() {
             createGrid();
             document.getElementById("reaction-time").innerText = "";
             if (timeout) clearTimeout(timeout);
-            setTimeout(changeRandomBox, Math.random() * 9000 + 1000);
+            setTimeout(changeRandomBox, Math.random() * 6000 + 1000);
         }
 
         function startGame() {
